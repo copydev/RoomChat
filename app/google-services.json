@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "779127682041",
+    "firebase_url": "https://roomchat-5cb4b.firebaseio.com",
+    "project_id": "roomchat-5cb4b",
+    "storage_bucket": "roomchat-5cb4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779127682041:android:1381872d379ddccd",
+        "android_client_info": {
+          "package_name": "com.example.roomchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779127682041-utc5u9rhv1rl777eh4gfbm0nm3bp62sa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.roomchat",
+            "certificate_hash": "ce7196b7217989045a869c6f7f4ff175a6d88c43"
+          }
+        },
+        {
+          "client_id": "779127682041-tt2mli7h596oa4bq2teekl52ki3omagg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz16wCTgBMVhWITPdMU-HDtcbo-gSSty8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779127682041-tt2mli7h596oa4bq2teekl52ki3omagg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
