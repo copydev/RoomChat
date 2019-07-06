@@ -131,9 +131,12 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
 
     @Override
     public void onNoteClick(int position) {
-//        Intent intent = new Intent(this,);
-//        startActivity(intent);
-        Toast.makeText(this,position+"",Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(MainActivity.this,ChatRoom.class);
+        intent.putExtra("roomname",roomNames.get(position));
+        intent.putExtra("username",user.getDisplayName());
+        startActivity(intent);
+
     }
 
     public void signOut() {

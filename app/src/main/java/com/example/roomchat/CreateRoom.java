@@ -76,7 +76,7 @@ public class CreateRoom extends AppCompatActivity {
                                 userRef.push().setValue(name);
 
                                 DatabaseReference groupRef = database.getReference().child("groups").child(name);
-                                groupRef.setValue("Hello, welcome to the room.");
+                                groupRef.push().setValue(user.getDisplayName()+" has entered the chat.");
 
                                 Intent intent = new Intent(CreateRoom.this, MainActivity.class);
                                 startActivity(intent);
