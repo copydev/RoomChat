@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
         final DatabaseReference uref =FirebaseDatabase.getInstance().getReference().child("user").child(getId(user.getEmail()));
         final DatabaseReference reflistener = FirebaseDatabase.getInstance().getReference();
 
-        
+
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -254,4 +254,12 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
         });
     }
 
+    @Override
+    public void onBackPressed() {
+
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
 }
