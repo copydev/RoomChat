@@ -4,8 +4,10 @@
 
     <item android:id="@+id/search"
         android:title="Search"
-        android:icon="@drawable/ic_launcher_foreground"
-        app:showAsAction="ifRoom"/>
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
+
 
     <item android:title="Create New Group"
         android:id="@+id/creategroup"/>

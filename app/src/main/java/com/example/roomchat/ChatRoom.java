@@ -88,6 +88,7 @@ public class ChatRoom extends AppCompatActivity {
                 String temp = "[" + username + "]: ";
                 temp += message.getText().toString();
                 addMessage(temp);
+                message.setText("");
             }
         });
 
@@ -98,5 +99,9 @@ public class ChatRoom extends AppCompatActivity {
         dataRef.push().setValue(str);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        addMessage(username + " has left the room.");
+    }
 }

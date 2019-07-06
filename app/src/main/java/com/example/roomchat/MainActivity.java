@@ -1,17 +1,26 @@
 package com.example.roomchat;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +54,27 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater =getMenuInflater();
         menuInflater.inflate(R.menu.main_menu,menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Toast.makeText(getApplicationContext(),query,Toast.LENGTH_SHORT).show();
+                search(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -53,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
         super.onOptionsItemSelected(item);
 
         switch (item.getItemId()){
-            case R.id.search:
-                Toast.makeText(this,"Search",Toast.LENGTH_LONG).show();
-                return true;
+//            case R.id.search:
+//                Toast.makeText(this,"Search",Toast.LENGTH_LONG).show();
+//                return true;
             case R.id.creategroup:
                 //Toast.makeText(this,"Group Created",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this,CreateRoom.class);
@@ -75,8 +105,9 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //For custom toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main_activity);
+        Toolbar myToolbar = findViewById(R.id.toolbar_main_activity);
         setSupportActionBar(myToolbar);
+
 
         //Room Names
 
@@ -132,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
     @Override
     public void onNoteClick(int position) {
 
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("groups").child(roomNames.get(position));
+        dr.push().setValue(user.getDisplayName() + " has entered the room.");
         Intent intent = new Intent(MainActivity.this,ChatRoom.class);
         intent.putExtra("roomname",roomNames.get(position));
         intent.putExtra("username",user.getDisplayName());
@@ -162,6 +195,63 @@ public class MainActivity extends AppCompatActivity implements Room_ListAdapter.
         }
 
         return id;
+    }
+
+    public void search(final String search){
+        Toast.makeText(getApplicationContext(),search,Toast.LENGTH_SHORT).show();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups");
+        final DatabaseReference uref =FirebaseDatabase.getInstance().getReference().child("user").child(getId(user.getEmail()));
+        final DatabaseReference reflistener = FirebaseDatabase.getInstance().getReference();
+
+        
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(search).exists()){
+
+
+
+                    uref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int chk = 0;
+                            for(DataSnapshot data : dataSnapshot.getChildren()){
+                                if(data.getValue().equals(search)){
+                                    chk = 1;
+                                    break;
+                                }
+                            }
+
+                            if(chk == 0) {
+                                reflistener.child("user").child(getId(user.getEmail())).push().setValue(search);
+                            }
+                            reflistener.child("groups").child(search).push().setValue(user.getDisplayName() + " has entered the room.");
+                            Intent intent = new Intent(MainActivity.this,ChatRoom.class);
+                            intent.putExtra("username",user.getDisplayName());
+                            intent.putExtra("roomname",search);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"No such room is present.",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
